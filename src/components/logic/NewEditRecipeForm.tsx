@@ -174,7 +174,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
     >
       <InputUI
         name="name"
-        label="name"
+        label="Name"
         type="input"
         register={register}
         validationSchema={{
@@ -190,7 +190,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
 
       <InputUI
         name="summary"
-        label="summary"
+        label="Summary"
         type="input"
         register={register}
         validationSchema={{
@@ -217,7 +217,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
 
       <InputUI
         name="directions"
-        label="directions"
+        label="Directions"
         type="textarea"
         register={register}
         validationSchema={{
@@ -234,7 +234,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
 
       <InputUI
         name="time"
-        label="time"
+        label="Time (minutes)"
         type="number"
         register={register}
         validationSchema={{
@@ -244,84 +244,100 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
         defaultValue={props.time}
       />
 
-      <div>
-        <InputUI
-          name="veggie"
-          label="veggie"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "veggie") ? true : false
-          }
-        />
+      <div className="relative z-0 h-fit">
+        <div className="bg-p relative z-20 grid grid-cols-2 bg-gray-200  py-4 pb-10 pt-16 before:absolute before:inset-1/2 before:-z-10 before:h-full before:w-[120%] before:-translate-x-1/2 before:-translate-y-1/2 before:bg-gray-200 before:content-['']">
+          <p className="absolute  left-0 top-6">Tags</p>
 
-        <InputUI
-          name="peanuts"
-          label="peanuts"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "peanuts") ? true : false
-          }
-        />
+          <InputUI
+            name="veggie"
+            label="veggie"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "veggie") ? true : false
+            }
+          />
 
-        <InputUI
-          name="vegan"
-          label="vegan"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "vegan") ? true : false
-          }
-        />
+          <InputUI
+            name="peanuts"
+            label="peanuts"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "nuts") ? true : false
+            }
+          />
 
-        <InputUI
-          name="keto"
-          label="keto"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "keto") ? true : false
-          }
-        />
+          <InputUI
+            name="vegan"
+            label="vegan"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "vegan") ? true : false
+            }
+          />
 
-        <InputUI
-          name="protein"
-          label="protein"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "protein") ? true : false
-          }
-        />
+          <InputUI
+            name="keto"
+            label="keto"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "keto") ? true : false
+            }
+          />
 
-        <InputUI
-          name="fast"
-          label="fast"
-          type="checkbox"
-          reg="tags"
-          register={register}
-          required={false}
-          defaultChecked={
-            props.dietaryTags?.find((el) => el === "time") ? true : false
-          }
-        />
+          <InputUI
+            name="protein"
+            label="protein"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "protein") ? true : false
+            }
+          />
+
+          <InputUI
+            name="fast"
+            label="fast"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "time") ? true : false
+            }
+          />
+
+          <InputUI
+            name="spicy"
+            label="spicy"
+            type="checkbox"
+            reg="tags"
+            register={register}
+            required={false}
+            defaultChecked={
+              props.dietaryTags?.find((el) => el === "spicy") ? true : false
+            }
+          />
+        </div>
       </div>
 
       <InputUI
         type="file"
         name="image"
-        label="upload image"
+        label="Image"
         reg="image"
         register={register}
         required={false}

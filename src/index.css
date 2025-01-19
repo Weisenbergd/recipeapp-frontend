@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --padding: 1rem;
+  --paddingMobile: 2rem;
+  --paddingDesktop: 6rem;
 }

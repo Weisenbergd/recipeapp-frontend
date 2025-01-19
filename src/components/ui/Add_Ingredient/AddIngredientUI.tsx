@@ -7,28 +7,25 @@ type Props = {
   formAction(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 };
 
-const AddIngredientUI = (props: Props) => {
+const AddIngredientUI = ({ main, addError, formAction }: Props) => {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2">
         <InputUI
-          label="ingredient"
+          label="Ingredient"
           name="ingredient"
           required={false}
           type="input"
           placeholder="test"
         />
-        {!props.main && (
-          <InputUI
-            label="add amount"
-            name="amount"
-            required={false}
-            type="input"
-          />
+        {!main && (
+          <InputUI label="Amount" name="amount" required={false} type="input" />
         )}
-        {props.addError && <p>{props.addError}</p>}
+        {addError && <p>{addError}</p>}
       </div>
-      <Button formAction={props.formAction}>Add Ingredient</Button>
+      <Button className="w-full" formAction={formAction}>
+        Add Ingredient
+      </Button>
     </div>
   );
 };

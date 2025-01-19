@@ -37,9 +37,14 @@ const Header = () => {
   return (
     <HeaderUI>
       <>
-        <h1 className="z-50">
-          <Link to="/">Reciperviewer </Link>
-        </h1>
+        <div>
+          <p className="text-3xl font-bold text-green-600">
+            <span className="text-orange-500">
+              <Link to="/">Recipe </Link>
+            </span>
+            Viewer
+          </p>
+        </div>
 
         <div className="z-20 flex gap-4 ">
           {!user?.user?.username ? (

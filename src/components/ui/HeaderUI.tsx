@@ -2,11 +2,13 @@ interface Props {
   children: React.ReactNode;
 }
 
-const HeaderUI = (props: Props) => {
+// before:absolute before:-right-[--padding] before:h-full before:w-svw before:bg-black before:content-[''] relative
+
+const HeaderUI = ({ children }: Props) => {
   return (
-    <div className="relative mb-6 flex h-2 min-h-14 items-center justify-between text-white before:absolute before:-right-[--padding] before:h-full before:w-svw before:bg-black before:content-['']">
-      {props.children}
-    </div>
+    <header className="px-paddingMobile md:px-paddingDesktop flex h-2 min-h-14 items-center justify-between bg-black py-8 text-white">
+      {children}
+    </header>
   );
 };
 export default HeaderUI;

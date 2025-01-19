@@ -5,13 +5,13 @@ import {
   MUTATE_RECIPE,
   GET_RECIPES,
 } from "../../graphql/recipes";
-import React, { StrictMode, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import RecipeUL from "../ui/RecipeUL";
 import { limit } from "../../vars";
 
 const GetRecipes = () => {
-  const initialRender = useRef(1);
+  const initialRender = useRef(0);
   const [params, setParams] = useSearchParams();
   let ingredientList = params.getAll("ingredients");
 
@@ -19,13 +19,16 @@ const GetRecipes = () => {
   // remember scroll location
   // don't resetStore if same ingredients
 
-  const { data, client, error, loading, fetchMore } = useQuery(GET_RECIPES, {
-    variables: {
-      ingredientList,
-      offset: 0,
-      limit: 4,
+  const { data, client, error, loading, fetchMore, refetch } = useQuery(
+    GET_RECIPES,
+    {
+      variables: {
+        ingredientList,
+        offset: 0,
+        limit,
+      },
     },
-  });
+  );
 
   // !important -- using any here.
   const [deleteRecipe] = useMutation(DELETE_RECIPE, {
@@ -60,23 +63,10 @@ const GetRecipes = () => {
   });
 
   useEffect(() => {
-    // value of 3 because strict mode renders twice
-    if (initialRender.current < 3) {
-      console.log("this only appears on first load");
-      if (import.meta.env.DEV) {
-        initialRender.current++;
-      } else {
-        initialRender.current = initialRender.current + 2;
-      }
-      return;
+    if (initialRender.current >= 2) {
+      refetch();
     }
-
-    const test = async () => {
-      console.log("this appears after inital load");
-      ingredientList = params.getAll("ingredients");
-      await client.refetchQueries({ include: [GET_RECIPES] });
-    };
-    if (initialRender.current >= 3) test();
+    initialRender.current++;
   }, [params]);
 
   if (loading) return <p>loading...</p>;

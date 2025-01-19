@@ -1,15 +1,21 @@
-interface Props {
+import clsx from "clsx";
+import { HTMLAttributes } from "react";
+
+type Props = {
   children: React.ReactNode;
   formAction?(e: React.MouseEvent<HTMLButtonElement>): void;
-}
+} & HTMLAttributes<HTMLButtonElement>;
 
-const Button = (props: Props) => {
+const Button = ({ children, formAction, className }: Props) => {
   return (
     <button
-      className="h-fit w-fit bg-black p-1.5 text-white"
-      onClick={props.formAction}
+      className={clsx(
+        `h-fit w-fit rounded-md bg-black p-3 text-white`,
+        className,
+      )}
+      onClick={formAction}
     >
-      {props.children}
+      {children}
     </button>
   );
 };

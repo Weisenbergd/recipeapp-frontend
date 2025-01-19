@@ -1,44 +1,50 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { HTMLAttributes } from "react";
 
-interface Props {
+type Props = {
   ingredients: {
     ingredient: string;
     amount: string;
   }[];
   removeIngredient(recipe: { ingredient: string; amount: string }): void;
   main: boolean;
-}
+} & HTMLAttributes<HTMLDivElement>;
 
-const IngredientListUI = (props: Props) => {
+const IngredientListUI = ({
+  ingredients,
+  removeIngredient,
+  main,
+  className,
+  ...props
+}: Props) => {
   return (
-    <div>
-      <h2 className="">Ingredients:</h2>
-      <ul
-        id="ingredients"
-        className="grid grid-cols-1 gap-4 border-b-2 border-white"
-      >
-        {props.ingredients.map((ingredient) => {
+    <div className={clsx("", className)} {...props}>
+      <ul id="ingredients" className="flex flex-col gap-2">
+        {ingredients.map((ingredient) => {
           return (
             <li
               key={ingredient.ingredient}
-              className="relative flex flex-col items-start gap-1 p-2"
+              className="flex items-center justify-between px-4 even:bg-slate-100"
             >
-              <div className="flex items-center gap-2">
-                <p>ingredient</p>
+              <div className="flex gap-4">
+                <p>Ingredient:</p>
                 <p>{ingredient.ingredient}</p>
               </div>
-              {!props.main && (
-                <div className="flex items-center gap-2">
+              {/* {!main && (
+                <div className="">
                   <p>amount</p>
                   <p className="">{ingredient.amount}</p>
                 </div>
-              )}
-              <FontAwesomeIcon
-                onClick={() => props.removeIngredient(ingredient)}
-                icon={faTrash}
-                className="absolute bottom-0 right-0 cursor-pointer p-3"
-              />
+              )} */}
+              <div>
+                <FontAwesomeIcon
+                  onClick={() => removeIngredient(ingredient)}
+                  icon={faTrash}
+                  className="cursor-pointer p-3"
+                />
+              </div>
             </li>
           );
         })}

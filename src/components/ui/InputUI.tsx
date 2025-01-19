@@ -1,12 +1,13 @@
+import clsx from "clsx";
+import { HTMLAttributes } from "react";
 import { UseFormRegister } from "react-hook-form";
 
-interface InputUIProps {
+type InputUIProps = {
   name: string;
   label: string;
   required: boolean;
   type: string;
   placeholder?: string;
-
   defaultValue?: string | number;
   defaultChecked?: boolean;
   // reg for registering checkboxes as tags
@@ -22,7 +23,7 @@ interface InputUIProps {
     };
     maxLength?: { value: number; message: string };
   };
-}
+} & HTMLAttributes<HTMLInputElement>;
 
 const InputUI = ({
   name,
@@ -35,17 +36,27 @@ const InputUI = ({
   defaultChecked,
   reg,
   placeholder,
+  className,
 }: InputUIProps): any => {
+  // todo -- why am i returning any here
   // so that inputs can still be used outside react-hook-form
   if (!register) {
     register = () => {};
   }
 
+  //"bg-bl peer relative flex  w-full border border-gray-400 p-1 placeholder-transparent"
+
   return (
-    <div className="relative">
-      {type != "textarea" && type != "file" && (
+    <div
+      className={clsx(
+        "flex gap-1",
+        type != "checkbox" ? "flex-col" : "flex-row gap-2 border bg-white p-4",
+      )}
+    >
+      <label htmlFor={name}>{label}</label>
+      {type != "textarea" && type != "checkbox" && (
         <input
-          className="peer w-auto bg-slate-100 placeholder-transparent"
+          className={clsx("border border-gray-600 p-1", className)}
           id={name}
           name={name}
           type={type}
@@ -54,15 +65,17 @@ const InputUI = ({
           })}
           required={required}
           defaultValue={defaultValue}
-          defaultChecked={defaultChecked}
-          value={reg ? name : undefined}
-          placeholder={label}
+          min={0}
+          // defaultChecked={defaultChecked}
+          // value={reg ? name : undefined}
         />
       )}
-
       {type === "textarea" && (
         <textarea
-          className="fix peer w-auto resize-none"
+          className={clsx(
+            " peer h-40 max-h-96  w-auto border border-gray-600 ",
+            className,
+          )}
           wrap="hard"
           id={name}
           name={name}
@@ -71,24 +84,38 @@ const InputUI = ({
           defaultValue={defaultValue}
         />
       )}
-
-      {type === "file" && (
+      {type === "checkbox" && (
         <input
+          name={name}
+          id={name}
+          className={clsx("-order-1", className)}
+          type={type}
+          required={false}
+        />
+      )}
+      {/* {type === "file" && (
+        <input
+          className={clsx(
+            "bg-bl peer relative flex  w-full border border-gray-400 p-1 placeholder-transparent",
+            className,
+          )}
           id={name}
           name={name}
           {...register(name)}
           required={required}
           type={type}
         />
-      )}
-
-      <label
-        className={`${type != "checkbox" ? "absolute -top-6 left-0 text-sm text-gray-400 transition-all peer-placeholder-shown:top-0 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-sm" : ""} `}
-        htmlFor={name}
-      >
-        {label}
-      </label>
+      )} */}
     </div>
   );
 };
 export default InputUI;
+
+{
+  /* <label
+className={`${type != "checkbox" && type != "file" && "absolute left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:top-[.5rem] peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:left-0 peer-focus:text-sm peer-focus:text-black"} `}
+htmlFor={name}
+>
+{label}
+</label> */
+}

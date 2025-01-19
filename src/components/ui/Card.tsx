@@ -1,15 +1,11 @@
-interface Props {
-  children: React.ReactNode;
-  className: string;
-}
+import clsx from "clsx";
+import { HTMLAttributes } from "react";
 
-const Card = (props: Props) => {
-  return (
-    <div
-      className={`relative h-full overflow-hidden rounded-lg bg-white p-4 ${props.className}`}
-    >
-      {props.children}
-    </div>
-  );
+type Props = {
+  children: React.ReactNode;
+} & HTMLAttributes<HTMLDivElement>;
+
+const Card = ({ children, className }: Props) => {
+  return <div className={clsx(``, className)}>{children}</div>;
 };
 export default Card;

@@ -3,11 +3,11 @@ import Header from "../components/logic/Header";
 
 const Root = () => {
   return (
-    <div className="bg-gray-200 px-padding ">
+    <div className=" flex  min-h-svh flex-col bg-gray-50">
       <Header />
-      <div className="sm:px-2 md:px-20">
+      <main className="md:px-paddingDesktop">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };

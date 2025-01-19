@@ -7,7 +7,8 @@ export default {
         transitionProperty: {
           height: "height",
         },
-        padding: "var(--padding)",
+        paddingMobile: "var(--paddingMobile)",
+        paddingDesktop: "var(--paddingDesktop)",
       },
     },
   },
