@@ -20,30 +20,34 @@ const IngredientListUI = ({
   ...props
 }: Props) => {
   return (
-    <div className={clsx("", className)} {...props}>
-      <ul id="ingredients" className="flex flex-col gap-2">
+    <div className={clsx("pt-2", className)} {...props}>
+      <ul id="ingredients" className="flex flex-col  border border-gray-400">
         {ingredients.map((ingredient) => {
           return (
             <li
               key={ingredient.ingredient}
-              className="flex items-center justify-between px-4 even:bg-slate-100"
+              className="flex items-center gap-3 border-b border-gray-400 px-2 py-2 even:bg-slate-100"
             >
-              <div className="flex gap-4">
-                <p>Ingredient:</p>
-                <p>{ingredient.ingredient}</p>
-              </div>
-              {/* {!main && (
-                <div className="">
-                  <p>amount</p>
-                  <p className="">{ingredient.amount}</p>
-                </div>
-              )} */}
-              <div>
+              <div className="self-end">
                 <FontAwesomeIcon
                   onClick={() => removeIngredient(ingredient)}
                   icon={faTrash}
-                  className="cursor-pointer p-3"
+                  className="cursor-pointer p-2"
                 />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex gap-4">
+                  {/* <p>Ingredient:</p> */}
+                  <p className="font-bold">{ingredient.ingredient}</p>
+                </div>
+                {!main && (
+                  <div className="">
+                    {/* <p>amount</p> */}
+                    <p className="font-serif text-sm font-light">
+                      {ingredient.amount}
+                    </p>
+                  </div>
+                )}
               </div>
             </li>
           );

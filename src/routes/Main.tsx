@@ -7,7 +7,7 @@ function Main() {
   return (
     <div className="">
       <form className="mb-6">
-        <AddIngredientDialog className="px-paddingMobile items-start md:w-[32rem]">
+        <AddIngredientDialog className="">
           <AddIngredient route="MAIN" setIngredients={() => {}} />
         </AddIngredientDialog>
       </form>

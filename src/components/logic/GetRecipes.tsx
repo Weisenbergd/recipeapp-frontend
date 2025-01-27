@@ -27,6 +27,7 @@ const GetRecipes = () => {
         offset: 0,
         limit,
       },
+      fetchPolicy: "network-only",
     },
   );
 

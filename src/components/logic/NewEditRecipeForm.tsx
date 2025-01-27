@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalContext } from "../../context/ModalContext";
 import InputUI from "../ui/InputUI";
 import FormUI from "../ui/FormUI";
+import FormErrors from "../ui/FormErrors";
 
 //  can probably use useFieldArray for adding ingredients instead
 //  of subform and hidden input
@@ -24,7 +25,7 @@ type FormValues = {
     amount: string;
   }[];
   time: string;
-  tags: string[];
+  dietaryTags: string[];
   directions: string;
   image: any;
 };
@@ -88,6 +89,13 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
     variables: {
       folder: "recipes",
     },
+    fetchPolicy: "no-cache",
+    onCompleted: (data) => {
+      console.log("Fetched S3 URL:", data?.getS3URL?.S3URL);
+    },
+    onError: (error) => {
+      console.error("Error fetching S3 URL:", error);
+    },
   });
 
   const {
@@ -99,32 +107,32 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    // refactor tags else passes boolean false
-
     let imageURL = null;
 
-    console.log("image--------", formData.image);
+    if (formData.image && formData.image[0]) {
+      try {
+        const url = data?.getS3URL?.S3URL;
+        if (!url) throw new Error("S3 URL not available");
 
-    if (formData.image[0]) {
-      const url = await data.getS3URL.S3URL;
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              formData.image[0].type || "application/octet-stream",
+          },
+          body: formData.image[0],
+        });
 
-      await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "image",
-        },
-        body: formData.image[0],
-      });
-
-      imageURL = url.split("?")[0];
+        if (!response.ok)
+          throw new Error(`Upload failed: ${response.statusText}`);
+        imageURL = url.split("?")[0];
+      } catch (err) {
+        console.error("Image upload error:", err);
+        return;
+      }
     }
 
-    if (!formData.tags) {
-      formData.tags = [];
-    }
-
-    // create recipe
-    if (!type) {
+    try {
       const recipe = await postRecipe({
         variables: {
           input: {
@@ -133,13 +141,18 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name: formData.name,
             ingredients: formData.ingredients,
             directions: formData.directions,
-            time: parseInt(formData.time),
-            dietaryTags: formData.tags,
+            time: formData.time ? parseInt(formData.time) : 0,
+            dietaryTags: formData.dietaryTags || [],
             imageURL,
           },
         },
       });
-      navigate(`../${recipe.data.createRecipe._id}`);
+
+      if (recipe.data?.createRecipe?._id) {
+        navigate(`../${recipe.data.createRecipe._id}`);
+      }
+    } catch (err) {
+      console.error("Recipe creation error:", err);
     }
 
     // edit recipe
@@ -153,12 +166,15 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             ingredients: formData.ingredients,
             directions: formData.directions,
             time: parseInt(formData.time),
-            dietaryTags: formData.tags,
+            dietaryTags: formData.dietaryTags,
             imageURL,
           },
         },
+        onError: (err) => console.log(err),
+        onCompleted: () => {
+          modalContext?.setModal(!modalContext.modal);
+        },
       });
-      modalContext?.setModal(!modalContext.modal);
     }
   };
 
@@ -252,7 +268,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="veggie"
             label="veggie"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
@@ -264,11 +280,11 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="peanuts"
             label="peanuts"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
-              props.dietaryTags?.find((el) => el === "nuts") ? true : false
+              props.dietaryTags?.find((el) => el === "peanuts") ? true : false
             }
           />
 
@@ -276,7 +292,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="vegan"
             label="vegan"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
@@ -288,7 +304,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="keto"
             label="keto"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
@@ -300,7 +316,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="protein"
             label="protein"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
@@ -312,11 +328,11 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="fast"
             label="fast"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={
-              props.dietaryTags?.find((el) => el === "time") ? true : false
+              props.dietaryTags?.find((el) => el === "fast") ? true : false
             }
           />
 
@@ -324,7 +340,7 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
             name="spicy"
             label="spicy"
             type="checkbox"
-            reg="tags"
+            reg="dietaryTags"
             register={register}
             required={false}
             defaultChecked={

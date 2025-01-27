@@ -9,13 +9,16 @@ const AddIngredientDialog = ({ children, className, ...rest }: Props) => {
   const [openFilter, setOpenFilter] = useState(false);
 
   return (
-    <div className={clsx("pb-6 pt-6 text-xl", className)} {...rest}>
+    <div
+      className={clsx("mx-auto max-w-[32rem] pt-6 text-xl", className)}
+      {...rest}
+    >
       <button
-        className="p-2"
+        className="p-2 text-blue-900"
         onClick={() => setOpenFilter(!openFilter)}
         type="button"
       >
-        {openFilter ? "Ingredient Filter" : "Ingredient Filter"}
+        {openFilter ? "Hide" : "Filter Ingredients"}
       </button>
       <div
         // can't transition on h-0 or h-fit -- workaround using grid that wraps a single child

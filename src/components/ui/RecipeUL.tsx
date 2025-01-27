@@ -77,8 +77,8 @@ const RecipeUL = ({ data, fetchMore, deleteRecipe, loading }: Props) => {
 
   return (
     <ul
-      id="recipeul"
-      className="ml-auto mr-auto grid w-fit place-items-center gap-6 lg:grid-cols-2 2xl:grid-cols-3"
+      id=""
+      className="mx-auto grid w-fit place-items-center gap-6 lg:w-full lg:grid-cols-2 2xl:grid-cols-3"
     >
       {data.getFiltered.map(
         (

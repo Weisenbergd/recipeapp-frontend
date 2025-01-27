@@ -88,9 +88,12 @@ const InputUI = ({
         <input
           name={name}
           id={name}
+          {...register("dietaryTags")}
           className={clsx("-order-1", className)}
           type={type}
           required={false}
+          defaultChecked={defaultChecked}
+          value={name}
         />
       )}
       {/* {type === "file" && (

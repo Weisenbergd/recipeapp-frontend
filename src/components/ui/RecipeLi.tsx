@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import {
@@ -39,57 +39,101 @@ interface Props {
 }
 
 const RecipeLI = (props: Props) => {
-  const user = useContext(AuthContext);
+  const [isImageValid, setIsImageValid] = useState(false);
+  // const [fallbackImage, setFallbackImage] = useState(
+  //   "/path/to/placeholder.jpg",
+  // )
+
+  useEffect(() => {
+    const checkImage = async () => {
+      try {
+        const response = await fetch(props.recipe.imageURL, { method: "HEAD" });
+
+        // Check if the response is a valid image and has non-zero size
+        const contentType = response.headers.get("Content-Type");
+        const contentLength = response.headers.get("Content-Length");
+
+        if (
+          contentType &&
+          contentType.startsWith("image") &&
+          contentLength &&
+          parseInt(contentLength) > 0
+        ) {
+          setIsImageValid(true);
+        } else {
+          setIsImageValid(false);
+        }
+      } catch (error) {
+        setIsImageValid(false); // Handle error or invalid URL
+      }
+    };
+
+    if (props.recipe.imageURL) {
+      checkImage();
+    }
+  }, [props.recipe.imageURL]);
+
+  // const user = useContext(AuthContext);
   return (
     // <li className="relative max-h-64 w-[full] overflow-hidden rounded-lg border  shadow-md duration-300 md:hover:size-full md:hover:-translate-y-2 md:hover:scale-110 md:hover:shadow-2xl">
     //   <Card className="">
-    <Link
-      className="relative flex w-[clamp(0px,100vw,25rem)] items-stretch gap-4 rounded-lg border shadow-md duration-300 hover:-translate-y-2 hover:scale-[1.02]  sm:hover:shadow-lg md:w-[30rem] md:hover:scale-105 md:hover:shadow-xl lg:w-[25rem]"
-      to={props.recipe._id}
-    >
-      {/* Image */}
-      <div className=" w-3/5">
-        <img
-          className="h-full w-full rounded-md object-cover"
-          src={props.recipe.imageURL || "../../../public/cake.jpg"}
-        />
-      </div>
+    <li className="w-full">
+      <Link to={props.recipe._id}>
+        <div className="relative flex h-fit min-h-64 w-[clamp(0px,100vw,25rem)] max-w-[32rem]  items-stretch gap-3 overflow-hidden  rounded-2xl border shadow-md duration-300 hover:-translate-y-2 hover:scale-[1.02] sm:hover:shadow-lg md:w-[32rem] md:hover:scale-105 md:hover:shadow-xl lg:w-full">
+          <div className="h-64 w-3/5 flex-shrink-0 bg-gray-200">
+            {props.recipe.imageURL && isImageValid && (
+              <img
+                className="h-full w-full rounded-l-2xl object-cover"
+                src={
+                  props.recipe.imageURL && isImageValid
+                    ? props.recipe.imageURL
+                    : `/food/food${Math.floor(Math.random() * 8) + 1}.webp`
+                }
+                alt="Recipe"
+              />
+            )}
+          </div>
 
-      {/* Text Area */}
-      <div className="flex h-fit w-2/5 flex-col gap-2 py-2 md:py-6">
-        <h3 className="text-xl font-bold">{props.recipe.name}</h3>
-        <p className="mb-1 line-clamp-3 min-h-[3.7rem] border-b-2 pb-1 text-sm">
-          {props.recipe.summary}
-        </p>
-        <ul className="flex h-12 flex-wrap gap-1 overflow-hidden">
-          {props.recipe.ingredients.map((ingredient, i) => {
-            return (
-              <li
-                className="text-sm after:ml-1 after:content-['•'] last:after:content-[] "
-                key={ingredient.ingredient + i}
-              >
-                {ingredient.ingredient}
-              </li>
-            );
-          })}
-        </ul>
-
-        <p className="absolute right-4 top-2">{props.recipe.time}</p>
-        {props.recipe.dietaryTags && (
-          <ul className="flex h-12 flex-wrap gap-1.5">
-            {props.recipe.dietaryTags.map((tag) => {
-              return (
-                <li key={tag} className="text-sm">
-                  {tag}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    </Link>
-    //   </Card>
-    // </li>
+          {/* Text Area */}
+          <div className="flex w-2/5 flex-1 flex-col gap-1 pt-6 md:gap-2">
+            <h3 className="text-xl font-bold">{props.recipe.name}</h3>
+            <p className="text-md h-fit  border-b-2 pb-1">
+              {props.recipe.summary}
+            </p>
+            <ul className="flex h-fit  flex-wrap items-center gap-1 overflow-hidden text-sm md:text-sm">
+              {props.recipe.ingredients
+                .slice(0, 4)
+                .map((ingredient, i, arr) => (
+                  <li
+                    className={` after:ml-1 ${
+                      i < arr.length - 1 ? "after:content-['•']" : ""
+                    }`}
+                    key={ingredient.ingredient + i}
+                  >
+                    {ingredient.ingredient}
+                  </li>
+                ))}
+              {props.recipe.ingredients.length > 4 && <li>•••</li>}
+            </ul>
+            {props.recipe.dietaryTags && (
+              <ul className="flex flex-wrap gap-1">
+                {props.recipe.dietaryTags.map((tag) => {
+                  return (
+                    <li
+                      key={tag}
+                      className={`bg-${tag} h-fit w-fit rounded-full p-1 text-xs`}
+                    >
+                      {tag}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            <p className="absolute right-4 top-2">{props.recipe.time}</p>
+          </div>
+        </div>
+      </Link>
+    </li>
   );
 };
 export default RecipeLI;

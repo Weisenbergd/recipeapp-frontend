@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ModalContext } from "../../context/ModalContext";
 
@@ -19,11 +19,23 @@ const Modal = (props: props) => {
     }
   };
 
+  useEffect(() => {
+    if (modal?.modal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modal?.modal]);
+
   return (
     <>
       {createPortal(
         <div
-          className="absolute left-0 top-0 z-50 h-full w-screen overflow-x-hidden"
+          className="fixed inset-0 z-50 h-full w-screen overflow-y-auto overflow-x-hidden"
           id="portal"
           onClick={clickOutside}
         >

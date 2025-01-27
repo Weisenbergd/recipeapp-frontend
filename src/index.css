@@ -5,4 +5,19 @@
 :root {
   --paddingMobile: 2rem;
   --paddingDesktop: 6rem;
+
+  --veggie: hsla(120, 100%, 25%, 0.3); /* Green */
+  --peanuts: hsla(39, 100%, 50%, 0.3); /* Orange */
+  --vegan: hsla(120, 73%, 75%, 0.5); /* Light Green */
+  --keto: hsla(0, 0%, 50%, 0.3); /* Gray */
+  --protein: hsla(30, 100%, 25%, 0.3); /* Brown */
+  --fast: hsla(330, 100%, 80%, 0.5); /* Pink */
+  --spicy: hsla(0, 100%, 50%, 0.3); /* Red */
+}
+
+main {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 4rem;
 }

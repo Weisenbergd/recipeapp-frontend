@@ -21,9 +21,9 @@ interface Props {
 
 const FormUI = (props: Props) => {
   return (
-    <div>
+    <div className="mx-auto w-full overflow-x-hidden px-2 md:w-[600px]">
       <form
-        className="m-10 mt-16 flex flex-col gap-8"
+        className="mx-auto mt-16 flex w-full max-w-4xl flex-col gap-4"
         onSubmit={props.onSubmit}
       >
         {props.children}

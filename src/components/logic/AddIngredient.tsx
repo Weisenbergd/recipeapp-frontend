@@ -121,7 +121,7 @@ const AddIngredient = (props: Props) => {
 
   return (
     <div className="relative z-0 h-fit">
-      <div className="relative z-20  bg-gray-200 py-4 pb-10 before:absolute before:inset-1/2 before:-z-10 before:h-full before:w-[120%] before:-translate-x-1/2 before:-translate-y-1/2 before:bg-gray-200 before:content-['']">
+      <div className="relative z-20  bg-gray-200 p-6 before:absolute before:inset-1/2 before:-z-10 before:h-full before:w-[120%] before:-translate-x-1/2 before:-translate-y-1/2 before:bg-gray-200 before:content-['']">
         <AddIngredientUI
           main={main}
           addError={addError}

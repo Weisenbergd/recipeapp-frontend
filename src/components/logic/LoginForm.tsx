@@ -46,33 +46,35 @@ const LoginForm = () => {
   if (data) console.log("data", data);
 
   return (
-    <div className="flex flex-col">
+    <div className="mx-auto flex flex-col">
       <FormUI
         onSubmit={handleSubmit(onSubmit)}
         errors={errors}
         error={error}
         buttonText="Login"
       >
-        <InputUI
-          name="username"
-          label="username"
-          required={true}
-          type="input"
-          register={register}
-        />
-        <InputUI
-          name="password"
-          label="password"
-          required={true}
-          type="input"
-          register={register}
-        />
+        <div className="flex flex-col gap-4">
+          <InputUI
+            name="username"
+            label="username"
+            required={true}
+            type="input"
+            register={register}
+          />
+          <InputUI
+            name="password"
+            label="password"
+            required={true}
+            type="input"
+            register={register}
+          />
+        </div>
       </FormUI>
 
       <Link
         onClick={() => modal?.setModal(!modal.modal)}
         to="/signup"
-        className="mt-10 self-end"
+        className="mt-2 self-end text-blue-900"
       >
         New user? Signup &rarr;
       </Link>
