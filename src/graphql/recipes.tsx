@@ -26,20 +26,23 @@ export const GET_RECIPES = gql`
       offset: $offset
       limit: $limit
     ) {
-      _id
-      name
-      summary
-      dietaryTags
-      ingredients {
-        ingredient
-      }
-      priority
-      time
-      author {
+      recipes {
         _id
-        username
+        name
+        summary
+        dietaryTags
+        ingredients {
+          ingredient
+        }
+        priority
+        time
+        author {
+          _id
+          username
+        }
+        imageURL
       }
-      imageURL
+      totalCount
     }
   }
 `;

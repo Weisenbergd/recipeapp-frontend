@@ -6,7 +6,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import RecipeLI from "./RecipeLi";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = {
   data: any;
@@ -27,85 +27,120 @@ type Props = {
       | undefined,
   ) => Promise<any>;
   loading: boolean;
+  isFetchingMore: boolean;
+  setIsFetchingMore: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const RecipeUL = ({ data, fetchMore, deleteRecipe, loading }: Props) => {
-  const handleFetch = useCallback(async () => {
-    const noScrollbar =
-      document.documentElement.scrollHeight <= window.innerHeight;
+const RecipeUL = ({
+  data,
+  fetchMore,
+  deleteRecipe,
+  loading,
+  isFetchingMore,
+  setIsFetchingMore,
+}: Props) => {
+  const initialized = useRef(false);
+  const [offSet, setOffSet] = useState(data.getFiltered.recipes.length);
+  const hasFetched = useRef(false); // Track if the fetch has already been triggered
 
-    const nearBottom =
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.scrollHeight - 100; // Buffer for triggering near the bottom
+  async function fetchAgain() {
+    // Only fetch if not already triggered
+    if (hasFetched.current) return; // Prevent multiple triggers
 
-    if ((noScrollbar || nearBottom) && !loading) {
-      await fetchMore({
-        variables: {
-          offset: data.getFiltered.length,
-        },
-      });
-    }
-  }, [data.getFiltered.length, loading, fetchMore]);
+    hasFetched.current = true; // Set flag to true when the fetch starts
+
+    await fetchMore({
+      variables: {
+        offset: data.getFiltered.recipes.length,
+      },
+    });
+
+    console.log("Fetch completed.");
+    hasFetched.current = false; // Reset flag after fetching is complete
+  }
 
   useEffect(() => {
-    // Trigger an initial fetch if there's no scrollbar
-    const noScrollbar =
-      document.documentElement.scrollHeight <= window.innerHeight;
-
-    if (noScrollbar && !loading) {
-      handleFetch();
+    // Check if we're at the bottom of the page on initial load
+    if (
+      window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight
+    ) {
+      console.log("At the bottom of the page");
+      fetchAgain();
     }
 
-    // Debounced event handler
-    let timer: any = null;
-
-    const handleEvent = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        handleFetch();
-      }, 100); // Debounce interval (100ms)
+    // Scroll event listener
+    const handleScroll = () => {
+      if (
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight
+      ) {
+        fetchAgain(); // Call fetchAgain only when at the bottom of the page
+      }
     };
 
-    window.addEventListener("scroll", handleEvent);
-    window.addEventListener("resize", handleEvent);
+    window.addEventListener("scroll", handleScroll);
 
+    // Cleanup the event listener when the component unmounts
     return () => {
-      window.removeEventListener("scroll", handleEvent);
-      window.removeEventListener("resize", handleEvent);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleFetch, loading]);
+  }, [data.getFiltered.recipes.length]);
 
   return (
-    <ul
-      id=""
-      className="mx-auto grid w-fit place-items-center gap-6 lg:w-full lg:grid-cols-2 2xl:grid-cols-3"
-    >
-      {data.getFiltered.map(
-        (
-          recipe: {
-            _id: string;
-            name: string;
-            ingredients: {
-              ingredient: string;
-              amount: string;
-            }[];
-            time: number;
-            dietaryTags: string[];
-            summary: string;
-            author: {
+    <div>
+      <ul
+        id=""
+        className="mx-auto grid place-items-center gap-6  lg:w-full lg:grid-cols-2 2xl:grid-cols-3"
+      >
+        {data.getFiltered.recipes.map(
+          (
+            recipe: {
               _id: string;
-              username: string;
-            };
-            imageURL: string;
+              name: string;
+              ingredients: {
+                ingredient: string;
+                amount: string;
+              }[];
+              time: number;
+              dietaryTags: string[];
+              summary: string;
+              author: {
+                _id: string;
+                username: string;
+              };
+              imageURL: string;
+            },
+            index: number,
+          ) => {
+            return (
+              <RecipeLI
+                key={index}
+                recipe={recipe}
+                deleteRecipe={deleteRecipe}
+              />
+            );
           },
-          index: number,
-        ) => {
-          return (
-            <RecipeLI key={index} recipe={recipe} deleteRecipe={deleteRecipe} />
-          );
-        },
+        )}
+      </ul>
+
+      {data.getFiltered.recipes.length === data.getFiltered.totalCount && (
+        <div className="mt-5 bg-gray-100 p-8">
+          <p>thats all!</p>
+          <p>testing:</p>
+          <p>totalCount on Screen {data.getFiltered.recipes.length}</p>
+          <p>totalCount in Query: {data.getFiltered.totalCount}</p>
+        </div>
       )}
-    </ul>
+      {/* <button
+        onClick={() => {
+          fetchAgain();
+          setOffSet((prevState: number) => prevState + 1);
+        }}
+      >
+        fetch more...
+      </button> */}
+    </div>
   );
 };
 export default RecipeUL;

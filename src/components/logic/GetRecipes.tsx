@@ -19,19 +19,18 @@ const GetRecipes = () => {
   // remember scroll location
   // don't resetStore if same ingredients
 
-  const { data, client, error, loading, fetchMore, refetch } = useQuery(
-    GET_RECIPES,
-    {
-      variables: {
-        ingredientList,
-        offset: 0,
-        limit,
-      },
-      fetchPolicy: "network-only",
+  const { data, loading, error, fetchMore, refetch } = useQuery(GET_RECIPES, {
+    variables: {
+      ingredientList,
+      offset: 0,
+      limit,
     },
-  );
+    fetchPolicy: "cache-first",
+    onError: (error) => console.log(error),
+  });
 
-  // !important -- using any here.
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
   const [deleteRecipe] = useMutation(DELETE_RECIPE, {
     onError: (error) => console.log(error),
     update(cache, { data }) {
@@ -63,23 +62,32 @@ const GetRecipes = () => {
     onError: (error) => console.log(error),
   });
 
-  useEffect(() => {
-    if (initialRender.current >= 2) {
-      refetch();
-    }
-    initialRender.current++;
-  }, [params]);
+  // useEffect(() => {
+  //   if (initialRender.current >= 2) {
+  //     refetch();
+  //   }
+  //   initialRender.current++;
+  // }, [params]);
 
   if (loading) return <p>loading...</p>;
   if (error) return <p>{error.message}</p>;
 
   return (
-    <RecipeUL
-      loading={loading}
-      data={data}
-      fetchMore={fetchMore}
-      deleteRecipe={deleteRecipe}
-    />
+    <div>
+      <RecipeUL
+        loading={loading}
+        data={data}
+        fetchMore={fetchMore}
+        deleteRecipe={deleteRecipe}
+        setIsFetchingMore={setIsFetchingMore}
+        isFetchingMore={isFetchingMore}
+      />
+      {(loading || isFetchingMore) && (
+        <div className="flex justify-center py-4">
+          <span className="text-sm text-gray-500">Loading...</span>
+        </div>
+      )}
+    </div>
   );
 };
 export default GetRecipes;

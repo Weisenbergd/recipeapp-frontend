@@ -16,7 +16,8 @@ import { ModalContextProvider } from "./context/ModalContext.tsx";
 
 const App = () => {
   const httpLink = createHttpLink({
-    uri: "http://localhost:4000",
+    // uri: "https://recipeapp-backend-production.up.railway.app",
+    uri: "http://localhost:4000/",
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -36,16 +37,13 @@ const App = () => {
       typePolicies: {
         Query: {
           fields: {
-            getRecipes: {
-              keyArgs: false,
-              merge(existing = [], incoming) {
-                return [...existing, ...incoming];
-              },
-            },
             getFiltered: {
-              keyArgs: false,
-              merge(existing = [], incoming) {
-                return [...existing, ...incoming];
+              keyArgs: ["ingredientList"], // Ensures cache separation for different queries
+              merge(existing = { recipes: [], totalCount: 0 }, incoming) {
+                return {
+                  ...incoming, // Keep totalCount from the latest fetch
+                  recipes: [...existing.recipes, ...incoming.recipes], // Merge recipes properly
+                };
               },
             },
           },

@@ -38,11 +38,10 @@ const Header = () => {
     <HeaderUI>
       <>
         <div>
-          <p className="text-3xl font-bold text-green-600">
-            <span className="text-orange-500">
-              <Link to="/">Recipe </Link>
-            </span>
-            Viewer
+          <p className="text-3xl font-bold ">
+            <Link to="/" replace>
+              Recipe Viewer
+            </Link>
           </p>
         </div>
 

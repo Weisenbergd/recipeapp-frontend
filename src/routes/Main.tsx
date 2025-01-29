@@ -5,7 +5,7 @@ import AddIngredientDialog from "../components/ui/Add_Ingredient/AddIngredientDi
 function Main() {
   // wrapped in form else AddIngredient will be embeded in form elsewhere
   return (
-    <div className="">
+    <div className=" px-3">
       <form className="mb-6">
         <AddIngredientDialog className="">
           <AddIngredient route="MAIN" setIngredients={() => {}} />

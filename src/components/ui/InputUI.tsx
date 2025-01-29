@@ -54,7 +54,7 @@ const InputUI = ({
       )}
     >
       <label htmlFor={name}>{label}</label>
-      {type != "textarea" && type != "checkbox" && (
+      {type != "textarea" && type != "checkbox" && type != "file" && (
         <input
           className={clsx("border border-gray-600 p-1", className)}
           id={name}
@@ -96,7 +96,7 @@ const InputUI = ({
           value={name}
         />
       )}
-      {/* {type === "file" && (
+      {type === "file" && (
         <input
           className={clsx(
             "bg-bl peer relative flex  w-full border border-gray-400 p-1 placeholder-transparent",
@@ -107,8 +107,20 @@ const InputUI = ({
           {...register(name)}
           required={required}
           type={type}
+          accept={name === "image" ? "image/*" : "*"}
+          validationSchema={{
+            validate: (fileList: FileList | undefined) => {
+              if (!fileList || fileList.length === 0) return true; // Not required, so allow empty
+              const file = fileList[0];
+              if (!file.type.startsWith("image/"))
+                return "Only image files are allowed";
+              if (file.size > 2 * 1024 * 1024)
+                return "File size must be less than 2MB"; // Optional: Size limit
+              return true;
+            },
+          }}
         />
-      )} */}
+      )}
     </div>
   );
 };

@@ -29,9 +29,11 @@ const FormUI = (props: Props) => {
         {props.children}
         <Button>{props.buttonText}</Button>
       </form>
-      {Object.keys(props.errors).length > 0 && (
+      {/* {Object.keys(props.errors).length > 0 && (
         <FormErrors errors={props.errors} />
-      )}
+      )} */}
+
+      {/* Apollo errors */}
       <Error error={props.error} />
     </div>
   );

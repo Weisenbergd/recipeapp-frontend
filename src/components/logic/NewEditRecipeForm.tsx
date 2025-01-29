@@ -220,16 +220,23 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
         defaultValue={props.summary}
       />
 
-      <AddIngredient
-        editIngredients={props.ingredients || null}
-        setIngredients={setIngredients}
-      />
-      <input
-        {...register("ingredients", {
-          required: "enter an ingredient",
-        })}
-        type="hidden"
-      />
+      <div>
+        <AddIngredient
+          editIngredients={props.ingredients || null}
+          setIngredients={setIngredients}
+        />
+        <input
+          {...register("ingredients", {
+            required: "ingredients required",
+          })}
+          type="hidden"
+        />
+        {errors.ingredients && ingredients.length < 1 && (
+          <div>
+            <p className="text-sm text-red-500">{errors.ingredients.message}</p>
+          </div>
+        )}
+      </div>
 
       <InputUI
         name="directions"
@@ -349,15 +356,21 @@ const NewRecipeForm = ({ props }: { props: PropsEditing }) => {
           />
         </div>
       </div>
-
-      <InputUI
-        type="file"
-        name="image"
-        label="Image"
-        reg="image"
-        register={register}
-        required={false}
-      />
+      <div>
+        <InputUI
+          type="file"
+          name="image"
+          label="Image"
+          reg="image"
+          register={register}
+          required={false}
+        />
+        {errors.image && (
+          <p className="text-sm text-red-500">
+            {errors.image.message?.toString()}
+          </p>
+        )}
+      </div>
     </FormUI>
   );
 };
