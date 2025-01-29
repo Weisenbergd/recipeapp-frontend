@@ -16,8 +16,8 @@ import { ModalContextProvider } from "./context/ModalContext.tsx";
 
 const App = () => {
   const httpLink = createHttpLink({
-    // uri: "https://recipeapp-backend-production.up.railway.app",
-    uri: "http://localhost:4000/",
+    uri: "https://recipeapp-backend-production.up.railway.app",
+    // uri: "http://localhost:4000/",
   });
 
   const authLink = setContext((_, { headers }) => {
