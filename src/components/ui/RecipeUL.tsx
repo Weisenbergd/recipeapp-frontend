@@ -61,6 +61,7 @@ const RecipeUL = ({
 
   useEffect(() => {
     // Check if we're at the bottom of the page on initial load
+
     if (
       window.scrollY + window.innerHeight >=
       document.documentElement.scrollHeight
@@ -71,8 +72,14 @@ const RecipeUL = ({
 
     // Scroll event listener
     const handleScroll = () => {
+      console.log(
+        window.scrollY + 500,
+        window.innerHeight,
+        document.documentElement.scrollHeight,
+      );
+
       if (
-        window.scrollY + window.innerHeight >=
+        window.scrollY + 500 + window.innerHeight >=
         document.documentElement.scrollHeight
       ) {
         fetchAgain(); // Call fetchAgain only when at the bottom of the page
