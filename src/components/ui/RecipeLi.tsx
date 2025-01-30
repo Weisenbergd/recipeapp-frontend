@@ -91,6 +91,7 @@ const RecipeLI = (props: Props) => {
           <div className="h-64 w-3/5 flex-shrink-0 bg-gray-200">
             {props.recipe.imageURL && isImageValid && (
               <img
+                crossOrigin="anonymous"
                 className="h-full w-full rounded-l-2xl object-cover"
                 src={
                   isImageValid

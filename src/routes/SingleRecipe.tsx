@@ -137,6 +137,7 @@ const SingleRecipe = () => {
             <img
               className="w-full object-scale-down md:max-h-[22rem] md:max-w-[44rem]"
               src={imageURL}
+              crossOrigin="anonymous"
             />
           </div>
         )}
