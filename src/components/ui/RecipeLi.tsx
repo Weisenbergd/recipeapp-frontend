@@ -8,6 +8,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import Card from "./Card";
+import DivLoader from "./DivLoader";
 
 interface Props {
   recipe: {
@@ -73,6 +74,13 @@ const RecipeLI = (props: Props) => {
     }
   }, [props.recipe.imageURL]);
 
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  // Handle image load event to stop showing the spinner
+  const handleImageLoad = () => {
+    setLoading(false);
+  };
+
   // const user = useContext(AuthContext);
   return (
     // <li className="relative max-h-64 w-[full] overflow-hidden rounded-lg border  shadow-md duration-300 md:hover:size-full md:hover:-translate-y-2 md:hover:scale-110 md:hover:shadow-2xl">
@@ -88,21 +96,26 @@ const RecipeLI = (props: Props) => {
                       md:w-[32rem] md:hover:scale-105 md:hover:shadow-xl lg:w-full"
         >
           {/* Image Section */}
-          <div className="h-64 w-3/5 flex-shrink-0 bg-gray-200">
+          <div className="relative h-64 w-3/5 flex-shrink-0 bg-gray-200">
+            {/* Show loading spinner while the image is loading */}
+            {loading && (
+              <DivLoader
+                size="w-12 h-12"
+                position="absolute inset-0"
+                bgColor="bg-opacity-50 bg-gray-100"
+              />
+            )}
+
             {props.recipe.imageURL && isImageValid && (
               <img
                 crossOrigin="anonymous"
                 className="h-full w-full rounded-l-2xl object-cover"
-                src={
-                  isImageValid
-                    ? props.recipe.imageURL
-                    : `/food/food${Math.floor(Math.random() * 8) + 1}.webp`
-                }
+                src={props.recipe.imageURL}
                 alt="Recipe"
+                onLoad={handleImageLoad} // Set the image as loaded
               />
             )}
           </div>
-
           {/* Text Section */}
           <div className="flex w-2/5 flex-1 flex-col gap-1 pt-6 md:gap-2">
             <h3 className="text-xl font-bold">{props.recipe.name}</h3>

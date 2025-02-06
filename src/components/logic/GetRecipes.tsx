@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 
 import RecipeUL from "../ui/RecipeUL";
 import { limit } from "../../vars";
+import Loader from "../ui/Loader";
+import DivLoader from "../ui/DivLoader";
 
 const GetRecipes = () => {
   const initialRender = useRef(0);
@@ -25,7 +27,7 @@ const GetRecipes = () => {
       offset: 0,
       limit,
     },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "network-only",
     onError: (error) => console.log(error),
   });
 
@@ -69,7 +71,7 @@ const GetRecipes = () => {
   //   initialRender.current++;
   // }, [params]);
 
-  if (loading) return <p>loading...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>{error.message}</p>;
 
   return (
@@ -84,7 +86,11 @@ const GetRecipes = () => {
       />
       {(loading || isFetchingMore) && (
         <div className="flex justify-center py-4">
-          <span className="text-sm text-gray-500">Loading...</span>
+          <DivLoader
+            size="w-8 h-8"
+            position="relative"
+            bgColor="bg-opacity-50 bg-gray-200"
+          />
         </div>
       )}
     </div>
