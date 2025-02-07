@@ -27,7 +27,7 @@ const GetRecipes = () => {
       offset: 0,
       limit,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-first",
     onError: (error) => console.log(error),
   });
 
